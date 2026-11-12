@@ -2,6 +2,11 @@
 
 Platform releases use `vX.Y.Z` tags and publish `ghcr.io/tencent/loopforge`. LoopForge Local packages use `local-vX.Y.Z` tags and are published by manually running the `release-local` workflow.
 
+## Unreleased
+
+- Upgrading with `./start.sh pull` now re-applies the schema pieces gorm AutoMigrate cannot create: the `run_telemetry.adapter` and `run_logs.level` generated columns from `migrations/001_run_obs_generated_columns.sql`, and the `INSERT IGNORE` starter catalog. A data volume from an older release no longer fails with `Error 1054 Unknown column 'adapter'` the first time someone opens a run detail. The installer and the upgrade command share one script, `scripts/install-schema-extensions.sh`, and a failed step stops the command with the migration file an operator has to run by hand.
+- `docs/deployment.md` splits `migrations/` into scripts the installer already covers, scripts an upgrade must run once, and scripts that only backfill existing rows.
+
 ## 0.3.8 — header sign-in hardening and a GHCR mirror option
 
 - With `AGENTFLOW_TRUST_IDENTITY_HEADERS=true`, identity headers such as `Staffname` are ignored on requests that carry `X-Forwarded-For`, `Forwarded` or `X-Real-IP`, unless the gateway also sends `X-AgentFlow-Gateway-Secret` matching the new `AGENTFLOW_IDENTITY_HEADER_SECRET`. A client behind a pass-through reverse proxy could otherwise sign in as any account. Deployments with the option off are unaffected.
