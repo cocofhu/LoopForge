@@ -4,6 +4,8 @@ Platform releases use `vX.Y.Z` tags and publish `ghcr.io/tencent/loopforge`. Loo
 
 ## Unreleased
 
+- Requirement clarification, Bot replies, run evals and the SOP preview build list only CodeBuddy models, because they run on CodeBuddy. `POST /api/chat-clarify`, `POST /api/issues/{id}/chat-clarify` and `POST /api/runs/{id}/eval` answer 400 for a model of another CLI (such as `codex:…`) instead of switching it to the CodeBuddy default; a Codex model saved earlier in these pickers falls back to the CLI default (#228).
+
 - Repository clone URLs no longer carry credentials. Saving a `cloneUrl` with a user name or password, such as `https://user:token@github.com/acme/app.git`, is rejected with a pointer to the Git token in personal settings; the repositories API, bootstrap payload, run, task and requirement views, and the runner task management list strip credentials from `cloneUrl` and `webUrl` of rows saved earlier; a `webUrl` with credentials is rejected on save; runner clone errors and redacted Git output mask them. `ssh://git@host/...` and `git@host:path` remotes are still accepted.
 
 Repositories saved earlier with a token in `cloneUrl` keep cloning until they are saved again. Saving one from the studio stores the URL without the token, so first put the Git token in 个人配置, then save the repository. Until then the token also lands in each workspace's `.git/config`, where the agent can read it, so re-save such repositories soon after upgrading.
