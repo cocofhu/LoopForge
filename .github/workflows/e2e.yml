@@ -25,7 +25,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - {os: ubuntu-latest, python-version: "3.8", node-version: "22"}
+          # setup-python publishes no Python 3.8 build for Ubuntu 26.04 (ubuntu-latest).
+          - {os: ubuntu-24.04, python-version: "3.8", node-version: "22"}
           - {os: ubuntu-latest, python-version: "3.12", node-version: "22"}
           - {os: ubuntu-latest, python-version: "3.12", node-version: "20"}
           - {os: macos-latest, python-version: "3.12", node-version: "22"}
@@ -43,7 +44,8 @@ jobs:
 
   e2e-browser:
     name: e2e-browser (dashboard in Chromium)
-    runs-on: ubuntu-latest
+    # Python Playwright 1.55 cannot install Chromium's dependencies on Ubuntu 26.04.
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v7.0.1
